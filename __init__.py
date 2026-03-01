@@ -16,12 +16,14 @@ WEB_DIRECTORY = "web"
 NODE_CLASS_MAPPINGS = {}
 NODE_DISPLAY_NAME_MAPPINGS = {}
 
-# Import server module to register routes
+# Import server module and register routes
 try:
     from comfyui_nuvu import nuvu_server
+    from server import PromptServer
+    nuvu_server.setup(PromptServer.instance.app)
     logging.info("Nuvu: Server routes registered successfully")
 except Exception as err:
-    logging.error("Nuvu: Failed to import server module: %s", err)
+    logging.error("Nuvu: Failed to register server routes: %s", err)
     import traceback
     traceback.print_exc()
 
