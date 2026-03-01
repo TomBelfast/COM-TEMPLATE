@@ -8,6 +8,13 @@ to register the API routes.
 """
 
 import logging
+import sys
+import os
+
+# Add this node's directory to sys.path so comfyui_nuvu package can be found
+_node_dir = os.path.dirname(os.path.abspath(__file__))
+if _node_dir not in sys.path:
+    sys.path.insert(0, _node_dir)
 
 WEB_DIRECTORY = "web"
 
