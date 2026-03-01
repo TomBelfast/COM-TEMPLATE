@@ -17,8 +17,8 @@ def setup(app):
     app.router.add_get("/nuvu/config", handle_config)
     app.router.add_get("/nuvu/auth", handle_auth)
     app.router.add_post("/nuvu/auth", handle_auth)
-    app.router.add_post("/nuvu/auth/floating-session", handle_ok)
-    app.router.add_post("/nuvu/auth/floating-heartbeat", handle_ok)
+    app.router.add_post("/nuvu/auth/floating-session", handle_floating_session)
+    app.router.add_post("/nuvu/auth/floating-heartbeat", handle_floating_heartbeat)
     app.router.add_get("/nuvu/auth/subscription-check", handle_subscription)
     app.router.add_get("/nuvu/device/identity", handle_device_identity)
     app.router.add_post("/nuvu/device/register", handle_ok)
@@ -120,6 +120,23 @@ async def handle_empty_list(request):
 
 async def handle_empty_dict(request):
     return web.json_response({})
+
+
+async def handle_floating_session(request):
+    return web.json_response({
+        "success": True,
+        "token": "stub-floating-token-abc123",
+        "session_id": "stub-session-id-abc123",
+        "expires_at": "2099-12-31T23:59:59Z",
+        "expiresAt": "2099-12-31T23:59:59Z",
+    })
+
+
+async def handle_floating_heartbeat(request):
+    return web.json_response({
+        "success": True,
+        "alive": True,
+    })
 
 
 async def handle_ok(request):
