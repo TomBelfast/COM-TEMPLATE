@@ -21,8 +21,32 @@ LOGGED_IN = {
     "access_token": "stub-access-token-abc123",
 }
 
+# Script injected into HTML <head> to bypass Auth0 before any JS modules load
+_BYPASS_SCRIPT_TAG = '<script src="/extensions/ComfyUI-Nuvu/0_bypass.js"></script>'
+
+
+async def _inject_bypass(request, response):
+    """Inject auth bypass script into the ComfyUI index.html response."""
+    if (
+        request.path in ("/", "")
+        and isinstance(response, web.Response)
+        and "text/html" in (response.content_type or "")
+    ):
+        try:
+            body = response.body
+            if body:
+                text = body.decode("utf-8", errors="replace")
+                if _BYPASS_SCRIPT_TAG not in text and "<head>" in text:
+                    text = text.replace("<head>", "<head>" + _BYPASS_SCRIPT_TAG, 1)
+                    response.body = text.encode("utf-8")
+        except Exception as e:
+            logger.warning("Nuvu: Failed to inject bypass script: %s", e)
+
 
 def setup(app):
+    # Register auth bypass HTML injection
+    app.on_response_prepare.append(_inject_bypass)
+
     app.router.add_get("/nuvu/config", handle_config)
     app.router.add_get("/nuvu/auth", handle_auth)
     app.router.add_post("/nuvu/auth", handle_auth)
