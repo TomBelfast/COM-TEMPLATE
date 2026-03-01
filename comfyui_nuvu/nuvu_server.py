@@ -10,7 +10,16 @@ from aiohttp import web
 logger = logging.getLogger("nuvu_server")
 
 OK = {"success": True}
-LOGGED_IN = {"success": True, "isLoggedIn": True, "loggedIn": True, "authenticated": True}
+LOGGED_IN = {
+    "success": True,
+    "isLoggedIn": True,
+    "loggedIn": True,
+    "authenticated": True,
+    "user_token": "stub-user-token-abc123",
+    "api_token": "stub-api-token-abc123",
+    "apiToken": "stub-api-token-abc123",
+    "access_token": "stub-access-token-abc123",
+}
 
 
 def setup(app):
